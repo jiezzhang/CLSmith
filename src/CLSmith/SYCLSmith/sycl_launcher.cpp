@@ -11,24 +11,21 @@ int main(int argc, char **argv) {
 
   const int dim = 1024;
   const int local_dim = 64;
-  std::vector<int> result(dim);
+  std::vector<ulong> result(dim);
 
   {
     cl::sycl::queue queue(selector);
     cl::sycl::range<1> global_range(dim);
     cl::sycl::range<1> local_range(local_dim);
-    cl::sycl::buffer<int, 1> res_buffer(result.data(), range);
+    cl::sycl::buffer<ulong, 1> res_buffer(result.data(), global_range);
 
     queue.submit([&](cl::sycl::handler &cgh) {
       auto acc =
           res_buffer.template get_access<cl::sycl::access::mode::read_write>(
               cgh);
-      cgh.parallel_for_work_group<class kernel>(
-          global_range, local_range, [=](cl::sycl::group<1> group) {
-            group.parallel_for_work_item([&](cl::sycl::h_item<1> item) {
-              kernel(item, acc);
-            });
-          });
+      cgh.parallel_for<class kernel>(
+          cl::sycl::ndrange<1>(global_range, local_range),
+          [=](cl::sycl::nd_item<1> item) { kernel(item, acc); });
     });
   }
 }

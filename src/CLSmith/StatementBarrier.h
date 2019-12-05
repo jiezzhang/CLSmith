@@ -54,7 +54,7 @@ class StatementBarrier : public CLStatement {
 
   // Outputs a simple barrier that blocks every thread (local and global).
   static void OutputBarrier(std::ostream& out) {
-    out << "barrier(CLK_LOCAL_MEM_FENCE | CLK_GLOBAL_MEM_FENCE);";
+    out << "item.barrier();";
   }
 
   Variable *GetGate() { return gate_; }

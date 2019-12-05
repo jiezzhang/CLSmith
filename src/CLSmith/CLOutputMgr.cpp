@@ -145,7 +145,7 @@ void CLOutputMgr::OutputEntryFunction(Globals& globals) {
   // own custom made one (without modifying the code).
   std::ostream& out = get_main_out();
   out << "template <typename ACC_T, int dim>" << std::endl;
-  out << "void kernel(cl::sycl::h_item<dim> item, ACC_T result";
+  out << "void kernel(cl::sycl::nd_range<dim> item, ACC_T result";
   if (CLOptions::atomics()) {
     out << ", ACC_T g_atomic_input";
     out << ", ACC_T g_special_values";
