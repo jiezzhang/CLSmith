@@ -144,20 +144,21 @@ void CLOutputMgr::OutputEntryFunction(Globals& globals) {
   // Would ideally use the ExtensionMgr, but there is no way to set it to our
   // own custom made one (without modifying the code).
   std::ostream& out = get_main_out();
-  out << "__kernel void entry(__global ulong *result";
+  out << "template <typename ACC_T, int dim>" << std::endl;
+  out << "void kernel(cl::sycl::h_item<dim> item, ACC_T result";
   if (CLOptions::atomics()) {
-    out << ", __global volatile uint *g_atomic_input";
-    out << ", __global volatile uint *g_special_values";
+    out << ", ACC_T g_atomic_input";
+    out << ", ACC_T g_special_values";
   }
   if (CLOptions::atomic_reductions()) {
-    out << ", __global volatile int *g_atomic_reduction";
+    out << ", ACC_T g_atomic_reduction";
   }
   if (CLOptions::emi())
-    out << ", __global int *emi_input";
+    out << ", ACC_T emi_input";
   if (CLOptions::fake_divergence())
-    out << ", __global int *sequence_input";
+    out << ", ACC_T sequence_input";
   if (CLOptions::inter_thread_comm())
-    out << ", __global long *g_comm_values";
+    out << ", ACC_T g_comm_values";
   out << ") {" << std::endl;
   globals.OutputArrayControlVars(out);
   globals.OutputBufferInits(out);
