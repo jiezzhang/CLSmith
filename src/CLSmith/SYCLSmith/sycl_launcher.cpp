@@ -1,4 +1,5 @@
 #include "common.hpp"
+#include "kernel.hpp"
 
 int main(int argc, char **argv) {
   argument arg;
