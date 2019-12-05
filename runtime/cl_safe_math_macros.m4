@@ -15,7 +15,7 @@ dnl here for now.
   (((si1) <= (($1)0)) && ((si2) > (($1)0)) && ((si1) < (($2) / (si2)))) || \
   (((si1) <= (($1)0)) && ((si2) <= (($1)0)) && (si1) != (($1)0)) && ((si2) < (($3) / (si1))))) \
   ? (si1) \
-  : mul_hi((si1), (si2));})
+  : cl::sycl::mul_hi((si1), (si2));})
 
 dnl As before the first check for the mul_hi part is not needed.
 #define safe_mad_hi_func_$1_s_s_s(_t1,_si1,_si2,_si3) \
@@ -30,7 +30,7 @@ dnl  : \
     ((((tmp) > (($1)0)) && ((si3) > (($1)0)) && ((tmp) > ((($1)($3))-(si3)))) || \
     (((tmp) < (($1)0)) && ((si3) < (($1)0)) && ((tmp) < ((($1)($2))-(si3))))) \
     ? (si1) \
-    : mad_hi((si1), (si2), (si3));}) \
+    : cl::sycl::mad_hi((si1), (si2), (si3));}) \
   ;})
 
 ')
@@ -50,7 +50,7 @@ define(`safe_signed_24bit_math',`
   (((si1) <= (($1)0)) && ((si2) > (($1)0)) && ((si1) < (($2) / (si2)))) || \
   (((si1) <= (($1)0)) && ((si2) <= (($1)0)) && ((si1) != (($1)0)) && ((si2) < (($3) / (si1))))) \
   ? (si1) \
-  : mul24((si1), (si2));})
+  : cl::sycl::mul24((si1), (si2));})
 
 #define safe_mad24_func_$1_s_s_s(_t1,_si1,_si2,_si3) \
   ({ _t1 si1 = (_si1) ; _t1 si2 = (_si2) ; _t1 si3 = (_si3) ; \
@@ -64,7 +64,7 @@ define(`safe_signed_24bit_math',`
     ((((tmp) > (($1)0)) && ((si3) > (($1)0)) && ((tmp) > (($3)-(si3)))) || \
     (((tmp) < (($1)0)) && ((si3) < (($1)0)) && ((tmp) < (($2)-(si3))))) \
     ? (si1) \
-    : mad24((si1), (si2), (si3));});})
+    : cl::sycl::mad24((si1), (si2), (si3));});})
 
 ')
 
@@ -76,13 +76,13 @@ define(`safe_unsigned_24bit_math',`
   ({ _t1 ui1 = (_ui1) ; _t1 ui2 = (_ui2) ; \
   (((ui1) < ($2)) || ((ui1) > ($3)) || ((ui2) < ($2)) || ((ui2) > ($3))) \
   ? (ui1) \
-  : mul24((ui1), (ui2));})
+  : cl::sycl::mul24((ui1), (ui2));})
 
 #define safe_mad24_func_$1_u_u_u(_t1,_ui1,_ui2,_ui3) \
   ({ _t1 ui1 = (_ui1) ; _t1 ui2 = (_ui2) ; _t1 ui3 = (_ui3) ; \
   (((ui1) < ($2)) || ((ui1) > ($3)) || ((ui2) < ($2)) || ((ui2) > ($3))) \
   ? (ui1) \
-  : mad24((ui1), (ui2), (ui3));})
+  : cl::sycl::mad24((ui1), (ui2), (ui3));})
 
 ')
 
@@ -94,7 +94,7 @@ define(`safe_math',`
   ({ _t1 x = (_x) ; _t2 y = (_y) ; _t2 z = (_z) ; \
   ((y) > (z)) \
   ? (x) \
-  : clamp((x), (y), (z));})
+  : cl::sycl::clamp((x), (y), (z));})
 
 ')
 
