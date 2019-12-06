@@ -4,7 +4,9 @@
 #include <CL/sycl.hpp>
 
 #include "cl_safe_math_macros.h"
+#include "custom_limits.h"
 #include "safe_math_macros.h"
+
 
 #ifdef NO_ATOMICS
 #define atomic_inc(x) -1
