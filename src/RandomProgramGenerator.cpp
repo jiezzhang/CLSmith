@@ -1376,11 +1376,6 @@ main(int argc, char **argv)
 			continue;
 		}
 
-		if (strcmp (argv[i], "--lang-cpp") == 0) {
-			CGOptions::lang_cpp(true);
-			continue;
-		}
-
 		if (strcmp (argv[i], "--reduce") == 0) {
 			string filename;
 			i++;

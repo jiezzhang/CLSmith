@@ -99,6 +99,7 @@ void CLOutputMgr::OutputHeader(int argc, char *argv[], unsigned long seed) {
   out << "// Seed: " << seed << std::endl;
   out << std::endl;
   out << "#include \"CLSmith.h\"" << std::endl;
+  out << "#include \"kernel.hpp\"" << std::endl;
   out << std::endl;
 }
 
@@ -125,8 +126,9 @@ std::ostream &CLOutputMgr::get_main_out() { return out_; }
 std::ostream &CLOutputMgr::get_header_out() { return header_out_; }
 
 void CLOutputMgr::OutputFunctionDeclear(std::ostream &out) {
-  out << "template <typename ACC_T, int dim>" << std::endl;
-  out << "void kernel(cl::sycl::nd_range<dim> item, ACC_T result";
+  out << "template <typename T, int dims, cl::sycl::access::mode mode,\n" ;
+  out << "          cl::sycl::access::target target, cl::sycl::access::placeholder placeholder>" << std::endl;
+  out << "void kernel(cl::sycl::nd_item<dims> item, cl::sycl::accessor<T, dims, mode, target, placeholder> result";
   if (CLOptions::atomics()) {
     out << ", ACC_T g_atomic_input";
     out << ", ACC_T g_special_values";
@@ -149,11 +151,16 @@ void CLOutputMgr::OutputEntryFunction(Globals &globals) {
   std::ostream &out = get_main_out();
   std::ostream &header_out = get_header_out();
 
+  header_out << "#ifndef _SYCLSMITH_KERNEL_" << std::endl;
+  header_out << "#define _SYCLSMITH_KERNEL_" << std::endl;
+
   OutputFunctionDeclear(out);
   OutputFunctionDeclear(header_out);
 
   out << " {" << std::endl;
   header_out << ";" << std::endl;
+
+  header_out << "#endif" << std::endl;
 
   globals.OutputArrayControlVars(out);
   globals.OutputBufferInits(out);

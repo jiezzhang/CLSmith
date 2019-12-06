@@ -225,7 +225,7 @@ CGOptions::set_default_settings(void)
 	max_indirect_level(CGOPTIONS_DEFAULT_MAX_INDIRECT_LEVEL);
 	output_file(CGOPTIONS_DEFAULT_OUTPUT_FILE);
 	interested_facts(ePointTo | eUnionWrite);
-	allow_const_volatile(true);
+	allow_const_volatile(false);
 	avoid_signed_overflow(true);
 	CGOptions::paranoid(false);
 	CGOptions::quiet(false);
@@ -264,8 +264,8 @@ CGOptions::set_default_settings(void)
 	arg_structs(true);
 	return_unions(true);
 	arg_unions(true);
-	volatiles(true);
-	volatile_pointers(true);
+	volatiles(false);
+	volatile_pointers(false);
 	const_pointers(true);
 	consts(true);
 	dangling_global_ptrs(true);
@@ -304,7 +304,7 @@ CGOptions::set_default_settings(void)
 	take_union_field_addr(true);
 	vol_struct_union_fields(true);
 	addr_taken_of_locals(true);
-	lang_cpp(false);
+	lang_cpp(true);
 
 	set_default_builtin_kinds();
 }

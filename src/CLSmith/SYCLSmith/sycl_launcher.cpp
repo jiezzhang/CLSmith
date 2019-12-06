@@ -24,8 +24,8 @@ int main(int argc, char **argv) {
       auto acc =
           res_buffer.template get_access<cl::sycl::access::mode::read_write>(
               cgh);
-      cgh.parallel_for<class kernel>(
-          cl::sycl::ndrange<1>(global_range, local_range),
+      cgh.parallel_for<class fuzz_kernel>(
+          cl::sycl::nd_range<1>(global_range, local_range),
           [=](cl::sycl::nd_item<1> item) { kernel(item, acc); });
     });
   }
