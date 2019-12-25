@@ -20,7 +20,7 @@
 namespace CLSmith {
 
 CLOutputMgr::CLOutputMgr()
-    : out_(CLOptions::output()), header_out_("kernel.hpp") {}
+    : out_(CLOptions::output()) {}
 
 void CLOutputMgr::OutputRuntimeInfo(
     const std::vector<unsigned int> &global_dims,
@@ -99,7 +99,6 @@ void CLOutputMgr::OutputHeader(int argc, char *argv[], unsigned long seed) {
   out << "// Seed: " << seed << std::endl;
   out << std::endl;
   out << "#include \"CLSmith.h\"" << std::endl;
-  out << "#include \"kernel.hpp\"" << std::endl;
   out << std::endl;
 }
 
@@ -122,8 +121,6 @@ void CLOutputMgr::Output() {
 }
 
 std::ostream &CLOutputMgr::get_main_out() { return out_; }
-
-std::ostream &CLOutputMgr::get_header_out() { return header_out_; }
 
 void CLOutputMgr::OutputFunctionDeclear(std::ostream &out) {
   out << "template <typename T, int dims, cl::sycl::access::mode mode,\n" ;
@@ -149,18 +146,18 @@ void CLOutputMgr::OutputEntryFunction(Globals &globals) {
   // Would ideally use the ExtensionMgr, but there is no way to set it to our
   // own custom made one (without modifying the code).
   std::ostream &out = get_main_out();
-  std::ostream &header_out = get_header_out();
+  //std::ostream &header_out = get_header_out();
 
-  header_out << "#ifndef _SYCLSMITH_KERNEL_" << std::endl;
-  header_out << "#define _SYCLSMITH_KERNEL_" << std::endl;
+  //header_out << "#ifndef _SYCLSMITH_KERNEL_" << std::endl;
+  //header_out << "#define _SYCLSMITH_KERNEL_" << std::endl;
 
   OutputFunctionDeclear(out);
-  OutputFunctionDeclear(header_out);
+  //OutputFunctionDeclear(header_out);
 
   out << " {" << std::endl;
-  header_out << ";" << std::endl;
+  //header_out << ";" << std::endl;
 
-  header_out << "#endif" << std::endl;
+  //header_out << "#endif" << std::endl;
 
   globals.OutputArrayControlVars(out);
   globals.OutputBufferInits(out);
