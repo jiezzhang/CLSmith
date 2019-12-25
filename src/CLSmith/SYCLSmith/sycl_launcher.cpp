@@ -69,8 +69,12 @@ int main(int argc, char **argv) {
   for (size_t i = 0; i < dim; ++i) {
     if (result[i] != baseline) {
       printf("Result mismatch in %zu: %lu vs %lu \n", i, result[i], baseline);
+    } else {
+      printf("Position %zu: %lu \n", i, result[i]);
     }
   }
+#else
+  std::cout << "single_task can't verify final result" << std::endl;
 #endif
   return 0;
 }
