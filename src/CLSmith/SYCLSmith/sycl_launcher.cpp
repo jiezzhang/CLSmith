@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
           cl::sycl::nd_range<1>(global_range, local_range),
           [=](cl::sycl::nd_item<1> item) { kernel(item, acc); });
     });
-#elif defined(PARALLEL_FOR_GROUP)
+#elif defined(PARALLEL_FOR_WORK_ITEM)
     queue.submit([&](cl::sycl::handler &cgh) {
       auto acc =
           res_buffer.template get_access<cl::sycl::access::mode::read_write>(
@@ -55,6 +55,16 @@ int main(int argc, char **argv) {
           global_range, local_range, [=](cl::sycl::group<1> group) {
             group.parallel_for_work_item(
                 [&] cl::sycl::h_item<1> item { kernel(item, acc); });
+          });
+    });
+#elif defined(PARALLEL_FOR_WORK_GROUP)
+    queue.submit([&](cl::sycl::handler &cgh) {
+      auto acc =
+          res_buffer.template get_access<cl::sycl::access::mode::read_write>(
+              cgh);
+      cgh.parallel_for_work_group<class fuzz_kernel>(
+          global_range, local_range, [=](cl::sycl::group<1> group) {
+            kernel(item, acc); 
           });
     });
 #else
