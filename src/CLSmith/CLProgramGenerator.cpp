@@ -44,16 +44,16 @@ void CLProgramGenerator::goGenerator() {
   CLStatement::InitProbabilityTable();
   // Create vector types.
   Vector::GenerateVectorTypes();
-  // Initialise function tables.
+  // Initialise function tables. (builtin function)
   FunctionInvocationBuiltIn::InitTables();
   // Initialise Variable objects used for thread identifiers.
   ExpressionID::Initialise();
-  // Initialize runtime parameters;
+  // Initialize runtime parameters (random may not be quiet good?);
   InitRuntimeParameters();
-  // Initalize atomic parameters
+  // Initalize atomic parameters (need to rewrite)
   if (CLOptions::atomics())
     ExpressionAtomic::InitAtomics();
-  // Initialise buffers used for inter-thread communication.
+  // Initialise buffers used for inter-thread communication (looks like USM, should be replaced).
   StatementComm::InitBuffers();
   // Initialise Message Passing data.
   MessagePassing::Initialise();

@@ -100,6 +100,13 @@ PutRandomSignedConstantInRange(string *ch) {
 	if (first_digit >= 8)
 		(*ch)[2] = '0' + (first_digit - 8);
 }
+static void
+PutRandomSignedConstantFloat(string *ch) {
+	bool flag = pure_rnd_flipcoin(50);
+	if (flag) {
+      (*ch) = '-' + *(ch);
+	}
+}
 
 // --------------------------------------------------------------
 static string
@@ -164,7 +171,6 @@ GenerateRandomLongLongConstant(void)
 }
 
 // --------------------------------------------------------------
-#if 0
 static string
 GenerateRandomFloatConstant(void)
 {
@@ -172,7 +178,15 @@ GenerateRandomFloatConstant(void)
 	string val = RandomDigits(5) + "." + RandomDigits(5);
 	return val;
 }
-#endif // 0
+
+// --------------------------------------------------------------
+static string
+GenerateRandomHalfConstant(void)
+{
+	// Generate a random floating point value with up to 10 digits of precision. (should look up precision of float/double.. 23 bits for IEEE-32?)
+	string val = RandomDigits(4) + "." + RandomDigits(4);
+	return val;
+}
 
 static string
 GenerateRandomConstantInRange(const Type* type, int bound)
@@ -324,11 +338,17 @@ GenerateRandomConstant(const Type* type)
 			case eUShort:    v = GenerateRandomShortConstant();	break;
 			case eULong:     v = GenerateRandomLongConstant();	break;
 			case eULongLong: v = GenerateRandomLongLongConstant();	break;
-			//case eFloat:     v = GenerateRandomFloatConstant();	break;
-			//case eDouble:    v = GenerateRandomFloatConstant();	break;
+			case eFloat:     v = GenerateRandomFloatConstant();	break;
+			case eDouble:    v = GenerateRandomFloatConstant();	break;
+			case eHalf:      v = GenerateRandomHalfConstant(); break;
 			}
-			if (type->is_signed())
-				PutRandomSignedConstantInRange(&v);
+			if (type->is_signed()) {
+				if (type->is_int()) {
+					PutRandomSignedConstantInRange(&v);
+				} else if (type->is_float()) {
+					PutRandomSignedConstantFloat(&v);
+				}
+			}				
 		}
     } else {
         assert(0);  // no support for types other than integers and structs for now

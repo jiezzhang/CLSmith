@@ -53,8 +53,10 @@ void ExpressionID::Initialise() {
   // Required due to derpy itemise. Will never be free'd.
   Block *blk = new Block(NULL, 0);
 
+  //1024 global buffer
   sequence_input = MemoryBuffer::CreateMemoryBuffer(
       MemoryBuffer::kGlobal, "sequence_input", utype, NULL, {1024});
+  //buffer index?
   for (int idx = 0; idx < 3; ++idx)
     for (int id = kGlobal; id <= kGroup; ++id) {
       CVQualifiers *cv = new CVQualifiers(

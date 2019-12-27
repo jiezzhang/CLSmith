@@ -67,7 +67,8 @@ enum eTypeDesc
 #define MAX_TYPE_DESC ((eTypeDesc) (eStruct+1))
 
 /*
- *
+ * Add any other simple types before half
+ * Or it wouldn't be selected
  */
 enum eSimpleType
 {
@@ -82,10 +83,11 @@ enum eSimpleType
 	eUInt,
 	eULong,
 	eULongLong,
-//	eFloat,
-//	eDouble,
+	eFloat,
+	eDouble,
+	eHalf,
 };
-#define MAX_SIMPLE_TYPES ((eSimpleType) (eULongLong+1))
+#define MAX_SIMPLE_TYPES ((eSimpleType) (eHalf+1))
 
 enum eMatchType
 {
@@ -249,11 +251,13 @@ public:
 	bool contain_pointer_field(void) const;
 	bool is_const_struct_union() const;
 	bool is_volatile_struct_union() const;
-	bool is_int(void) const { return eType == eSimple && simple_type != eVoid;}
+	bool is_int(void) const;
+	bool is_float(void) const;
 	bool is_aggregate(void) const { return eType == eStruct || eType == eUnion;}
 	bool match(const Type* t, enum eMatchType mt) const;
 	unsigned long SizeInBytes(void) const;
 	void Output(std::ostream &) const;
+	void OutputSimpileType(std::ostream &) const;
 	std::string printf_directive(void) const;
 	static Type* find_pointer_type(const Type* t, bool add);
 	static Type* find_type(const Type* t);

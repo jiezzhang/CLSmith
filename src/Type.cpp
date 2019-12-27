@@ -1286,6 +1286,16 @@ Type::is_bitfield(size_t index) const
 	return (bitfields_length_[index] >= 0);
 }
 
+bool Type::is_int() const {
+  return eType == eSimple && (simple_type != eVoid && simple_type != eDouble &&
+                              simple_type != eFloat && simple_type != eHalf);
+}
+
+bool Type::is_float() const {
+  return eType == eSimple && (simple_type == eDouble || simple_type == eFloat ||
+                              simple_type == eHalf);
+}
+
 bool
 Type::has_bitfields() const
 {
@@ -1544,8 +1554,9 @@ Type::SizeInBytes(void) const
 		case eUShort:	return 2;
 		case eULong:	return 4;
 		case eULongLong:return 8;
-//		case eFloat:	return 4;
-//		case eDouble:	return 8;
+		case eFloat:	return 4;
+		case eDouble:	return 8;
+		case eHalf:     return 2;
 		}
 		break;
 	case eUnion: { 
@@ -1657,19 +1668,31 @@ Type::contain_pointer_field(void) const
 
 // ---------------------------------------------------------------------
 void
+Type::OutputSimpileType(std::ostream &out) const
+{
+	switch (this->simple_type) {
+		case eChar: out << "char"; break;
+		case eShort: out << "short"; break;
+		case eInt: out << "int"; break;
+		case eLong: out << "long"; break;
+		case eLongLong: out << "long long"; break;
+		case eUChar: out << "unsigned char"; break;
+		case eUShort: out << "unsigned short"; break;
+		case eUInt: out << "unsigned int"; break;
+		case eULong: out << "unsigned long"; break;
+		case eULongLong: out << "unsigned long long"; break;
+		case eFloat: out << "float"; break;
+		case eDouble: out << "double"; break;
+		case eHalf: out << "cl::sycl::half"; break; // safer
+	}
+}
+
+void
 Type::Output(std::ostream &out) const
 {
 	switch (eType) {
 	case eVector:	CLSmith::Vector::OutputVectorType(out, this, vector_length_); break;
-	case eSimple:
-		if (this->simple_type == eVoid) {
-			out << "void";
-		} else {
-			out << (is_signed() ? "int" : "uint");
-			out << (SizeInBytes() * 8);
-			out << "_t";
-		} 
-		break;
+	case eSimple:   OutputSimpileType(out);	break;
 	case ePointer:	ptr_type->Output( out ); out << "*"; break;
 	case eUnion:	out << "union U" << sid; break;
 	case eStruct:	out << "struct S" << sid; break;

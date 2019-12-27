@@ -63,9 +63,8 @@ int main(int argc, char **argv) {
           res_buffer.template get_access<cl::sycl::access::mode::read_write>(
               cgh);
       cgh.parallel_for_work_group<class fuzz_kernel>(
-          global_range, local_range, [=](cl::sycl::group<1> group) {
-            kernel(item, acc); 
-          });
+          global_range, local_range,
+          [=](cl::sycl::group<1> group) { kernel(item, acc); });
     });
 #else
     std::cout << "Invalid kernel submitting way" << std::endl;

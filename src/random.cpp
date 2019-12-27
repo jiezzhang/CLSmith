@@ -63,7 +63,8 @@ std::string RandomHexDigits( int num )
 std::string RandomDigits( int num )
 {
 	RandomNumber *rnd = RandomNumber::GetInstance();
-	return rnd->RandomDigits(num);
+	auto str = rnd->RandomDigits(num);
+	return str;
 }
 
 unsigned int
